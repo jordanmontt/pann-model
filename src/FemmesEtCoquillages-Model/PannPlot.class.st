@@ -2,7 +2,8 @@ Class {
 	#name : 'PannPlot',
 	#superclass : 'CMCell',
 	#instVars : [
-		'state'
+		'state',
+		'isProtected'
 	],
 	#category : 'FemmesEtCoquillages-Model',
 	#package : 'FemmesEtCoquillages-Model'
@@ -21,6 +22,12 @@ PannPlot >> beMudflat [
 ]
 
 { #category : 'state changing' }
+PannPlot >> beProtected [
+
+	isProtected := true
+]
+
+{ #category : 'state changing' }
 PannPlot >> beSea [
 
 	state := #sea
@@ -36,6 +43,7 @@ PannPlot >> beVillage [
 PannPlot >> initialize [ 
 
 	super initialize.
+	isProtected := false
 ]
 
 { #category : 'state changing' }
@@ -48,6 +56,12 @@ PannPlot >> isMangrove [
 PannPlot >> isMudflat [
 
 	^ state = #mudflat
+]
+
+{ #category : 'accessing' }
+PannPlot >> isProtected [
+
+	^ isProtected
 ]
 
 { #category : 'state changing' }
@@ -67,12 +81,17 @@ PannPlot >> pov [
 
 	<pov>
 	
-	state = #sea ifTrue: [ ^ CMPointOfView color: '70EAFF' ].
-	state = #village ifTrue: [ ^ CMPointOfView color: '8F1437' ].
-	state = #mudflat ifTrue: [ ^ CMPointOfView color: 'FFFCB3' ].
-	state = #mangrove ifTrue: [ ^ CMPointOfView color: '0DB370' ].
+	| pov |
+	pov := CMPointOfView new.
 	
-	^ super pov. "if no state, super pov by default"
+	self isProtected ifTrue: [ pov borderColor: Color red ].
+	
+	state = #sea ifTrue: [ pov color: '70EAFF' ].
+	state = #village ifTrue: [ pov color: '8F1437' ].
+	state = #mudflat ifTrue: [ pov color: 'FFFCB3' ].
+	state = #mangrove ifTrue: [ pov color: '0DB370' ].
+	
+	^ pov
 ]
 
 { #category : 'accessing' }

@@ -129,9 +129,8 @@ PannModel >> dayCounter [
 { #category : 'init' }
 PannModel >> initMatrix30 [
 	"This method is used to define the initial environment of a simulation. It will be executed once when the simulation is initialized."
-
 	<init>
-	
+
 	currentDayOfMonth := 1.
 	currentMonth := 11. "simulation starts in november"
 	dayCounter  := 0.
@@ -155,8 +154,9 @@ PannModel >> initMatrix30 [
 		randomlyLocatedEntities: PannFisher
 		constrainedBy: [ :aCell | aCell state = #mudflat ].
 		
-	self buildSare. 
-
+	self buildSare.
+	
+	self initializeProtectedArea
 ]
 
 { #category : 'init' }
@@ -247,6 +247,12 @@ PannModel >> initialiseSareAttributes [
 	sare recruitCapacity: 55. "10 000 per year"
 ]
 
+{ #category : 'init' }
+PannModel >> initializeProtectedArea [
+
+	(self sareNamed: #mbina) components do: #beProtected
+]
+
 { #category : 'time  ' }
 PannModel >> isFishingPeriod [
     "Return true if the current month is within the fishing period (Nov–Jun)"
@@ -257,6 +263,12 @@ PannModel >> isFishingPeriod [
 PannModel >> isNotFishingPeriod [
     "Return true if the current month is within the no-fishing period (Jul–Oct)"
     ^ (currentMonth between: 7 and: 10)
+]
+
+{ #category : 'initialization' }
+PannModel >> modelRules [
+
+	^ { PannFishingZoneRule new }
 ]
 
 { #category : 'init' }

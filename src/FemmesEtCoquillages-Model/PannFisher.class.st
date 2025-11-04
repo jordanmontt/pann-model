@@ -44,8 +44,9 @@ PannFisher >> dailyEarnings: anObject [
 
 { #category : 'actions' }
 PannFisher >> fish [
-    
-	dailyEarnings := self cell shellfishPopulation extractShellfish.
+
+	<action>
+	dailyEarnings := self cell shellfishPopulation extractShellfish
 ]
 
 { #category : 'actions' }
@@ -83,6 +84,13 @@ PannFisher >> initialize [
 
 	super initialize.
 	dailyEarnings := 0.
+]
+
+{ #category : 'as yet unclassified' }
+PannFisher >> payFine [
+
+	dailyEarnings := dailyEarnings * 0.7.
+	(self id asString , ' illegally fished on cell: ' , self cell id asString) traceCr
 ]
 
 { #category : 'pov' }
