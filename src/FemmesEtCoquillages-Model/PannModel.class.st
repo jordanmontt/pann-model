@@ -173,8 +173,9 @@ PannModel >> initMatrix1 [
 { #category : 'init' }
 PannModel >> initMatrix30 [
 	"This method is used to define the initial environment of a simulation. It will be executed once when the simulation is initialized."
-	<init>
 
+	<init>
+	
 	currentDayOfMonth := 1.
 	currentMonth := 11. "simulation starts in november"
 	dayCounter  := 0.
@@ -332,6 +333,8 @@ PannModel >> isNotFishingPeriod [
 PannModel >> modelRules [
 
 	^ { PannFishingZoneRule new }
+]
+
 { #category : 'time  ' }
 PannModel >> isRecruitDay [
 
