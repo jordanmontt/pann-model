@@ -306,6 +306,12 @@ PannModel >> initialiseSareAttributes1 [
 	sare recruitCapacity: 200. "20 000 1cm shellfishes are recruited every year, so 109 every two days "
 ]
 
+{ #category : 'initialization' }
+PannModel >> initializeProtectedArea [
+
+	(self sareNamed: #mbina) components do: #beProtected
+]
+
 { #category : 'time  ' }
 PannModel >> isFishingPeriod [
     "Return true if the current month is within the fishing period (Nov–Jun)"
@@ -329,16 +335,16 @@ PannModel >> isNotFishingPeriod [
     ^ (currentMonth between: 7 and: 10)
 ]
 
-{ #category : 'initialization' }
-PannModel >> modelRules [
-
-	^ { PannFishingZoneRule new }
-]
-
 { #category : 'time  ' }
 PannModel >> isRecruitDay [
 
 	^ (currentDayOfMonth = 1)  and: (currentMonth = 12)
+]
+
+{ #category : 'initialization' }
+PannModel >> modelRules [
+
+	^ { PannFishingZoneRule new }
 ]
 
 { #category : 'init' }
