@@ -44,8 +44,17 @@ PannFisher >> dailyEarnings: anObject [
 
 { #category : 'actions' }
 PannFisher >> fish [
+"!!! the dailyEarnings are in number of shellfish, thta's not good !!! It should be in FCFA. Thta's what I started doing underneath"
 
-	dailyEarnings := self cell shellfishPopulation extractShellfish
+    dailyEarnings := self cell shellfishPopulation extractShellfish.
+
+"
+
+	fishedQuantity := self cell shellfishPopulation extractShellfish.
+	
+	fleshWeight := (fishedQuantity / 600). ""600 is the estimated number of shellfish per bassin""
+	
+	dailyEarnings := flesh"
 ]
 
 { #category : 'actions' }

@@ -16,7 +16,7 @@ Class {
 { #category : 'initialization' }
 PannModel class >> initializeParameters [
 	super initializeParameters.
-	numberOfFishers := 20
+	numberOfFishers := 200
 ]
 
 { #category : 'as yet unclassified' }
@@ -108,6 +108,23 @@ PannModel >> buildSare [
 	
 ]
 
+{ #category : 'init' }
+PannModel >> buildSare1 [
+	
+	self releaseAggregateType: PannSare .
+	self
+		createAggregates: PannSare 
+		from: PannPlot 
+		verifying: [ :aCell | aCell isMudflat ]
+		minimumSize: 1.
+		
+	(self @@ PannSare) do: [ :agg | "self spaceModel meanCompactness: PannSare"
+		agg initNeighbourhood ].
+	
+	self initialiseSareAttributes1.
+	
+]
+
 { #category : 'accessing' }
 PannModel >> currentDayOfMonth [
 
@@ -124,6 +141,33 @@ PannModel >> currentMonth [
 PannModel >> dayCounter [
 
 	^ dayCounter
+]
+
+{ #category : 'init' }
+PannModel >> initMatrix1 [
+	"This method is used to define the initial environment of a simulation. It will be executed once when the simulation is initialized."
+
+	<init>
+	
+	currentDayOfMonth := 1.
+	currentMonth := 11. "simulation starts in november"
+	dayCounter  := 0.
+	
+	"create grid"
+	self
+		createGridNumberOfRows: 1
+		numberOfColumns: 1
+		neighbourhood: 6
+		closed: true.
+		
+ 	self applyStatesFromMatrix: self stateMatrix1.
+	
+	"add shellfish on every mudflat cell"
+	(self cells select: [ :c | c state = #mudflat ]) do: [ :cell |
+		self newEntity: PannShellfishPopulation locatedAt: cell ].
+	
+		self buildSare1. 
+
 ]
 
 { #category : 'init' }
@@ -188,7 +232,7 @@ PannModel >> initMatrix5 [
 		randomlyLocatedEntities: PannFisher
 		constrainedBy: [ :aCell | aCell state = #mudflat ].
 	
-		self buildSare. 
+		self buildSare1. 
 
 ]
 
@@ -232,7 +276,7 @@ PannModel >> initialiseSareAttributes [
 	
 	sare := ( self @@ PannSare ) detect: [ :each | each id = 1]. 
 	sare name: 'amacala 1'.
-	sare recruitCapacity: 183. "20 000 1cm shellfishes are recruited every year, so 109 every two days "
+	sare recruitCapacity: 200. "20 000 1cm shellfishes are recruited every year, so 109 every two days "
 	
 	sare := ( self @@ PannSare ) detect: [ :each | each id = 2]. 
 	sare name: 'anewanew 1'.
@@ -252,15 +296,30 @@ PannModel >> initialiseSareAttributes [
 ]
 
 { #category : 'init' }
-PannModel >> initializeProtectedArea [
+PannModel >> initialiseSareAttributes1 [
 
-	(self sareNamed: #mbina) components do: #beProtected
+	| sare |
+	
+	sare := ( self @@ PannSare ) detect: [ :each | each id = 1]. 
+	sare name: 'amacala 1'.
+	sare recruitCapacity: 200. "20 000 1cm shellfishes are recruited every year, so 109 every two days "
 ]
 
 { #category : 'time  ' }
 PannModel >> isFishingPeriod [
     "Return true if the current month is within the fishing period (Nov–Jun)"
     ^ (currentMonth >= 11) or: [currentMonth <= 6]
+]
+
+{ #category : 'time  ' }
+PannModel >> isMbissa [
+    "Return true if the current day is within a mbissa"
+ 
+	| cycleLength mbissaLength cycleDay |
+	mbissaLength := 10.
+	cycleLength := 15.
+	cycleDay := (self dayCounter - 1 \\ cycleLength) + 1.
+	^ cycleDay <= mbissaLength
 ]
 
 { #category : 'time  ' }
@@ -273,6 +332,10 @@ PannModel >> isNotFishingPeriod [
 PannModel >> modelRules [
 
 	^ { PannFishingZoneRule new }
+{ #category : 'time  ' }
+PannModel >> isRecruitDay [
+
+	^ (currentDayOfMonth = 1)  and: (currentMonth = 12)
 ]
 
 { #category : 'init' }
@@ -280,6 +343,15 @@ PannModel >> sareNamed: aString [
 "to access a sare by his name"
 
 	^(self @@ PannSare) detect: [ :each | each name = aString ]
+]
+
+{ #category : 'gridMatrix' }
+PannModel >> stateMatrix1 [
+    "Returns a sample map : 0 = sea, 1 = village, 2 = mudflat, 3 = mangrove."
+
+    ^ #(
+		(2)
+    )
 ]
 
 { #category : 'gridMatrix' }
@@ -425,14 +497,14 @@ PannModel >> step [
 		s recruit.
 		 ].
 	
-	self isFishingPeriod ifTrue: [ (self shuffled: (self @@ PannFisher))
-		do: #goToFishingSpot;
-		do: #fish.
-		].
-	
-	self isNotFishingPeriod ifTrue: [ (self shuffled: (self @@ PannFisher))
-		do: #goToVillage;
-		do: [:fisher | fisher dailyEarnings: 0 ].
+	(self isFishingPeriod and: [ self isMbissa ]) ifTrue: [ 
+		(self shuffled: (self @@ PannFisher))
+			do: #goToFishingSpot;
+			do: #fish.
+		] ifFalse: [
+		(self shuffled: (self @@ PannFisher))
+			do: #goToVillage;
+			do: [:fisher | fisher dailyEarnings: 0 ]. "there is no other activity"
 		].
 ]
 
