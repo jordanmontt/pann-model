@@ -341,12 +341,6 @@ PannModel >> isRecruitDay [
 	^ (currentDayOfMonth = 1)  and: (currentMonth = 12)
 ]
 
-{ #category : 'initialization' }
-PannModel >> modelRules [
-
-	^ { PannFishingZoneRule new }
-]
-
 { #category : 'init' }
 PannModel >> sareNamed: aString [
 "to access a sare by his name"

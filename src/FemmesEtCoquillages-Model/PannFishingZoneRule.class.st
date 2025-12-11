@@ -1,6 +1,6 @@
 Class {
 	#name : 'PannFishingZoneRule',
-	#superclass : 'CMRule',
+	#superclass : 'CMNorm',
 	#category : 'FemmesEtCoquillages-Model',
 	#package : 'FemmesEtCoquillages-Model'
 }
