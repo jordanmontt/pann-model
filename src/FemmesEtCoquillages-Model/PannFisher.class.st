@@ -94,13 +94,6 @@ PannFisher >> initialize [
 	dailyEarnings := 0.
 ]
 
-{ #category : 'as yet unclassified' }
-PannFisher >> payFine [
-
-	"dailyEarnings := dailyEarnings * 0.7."
-	(self id asString , ' illegally fished on cell: ' , self cell id asString) traceCr
-]
-
 { #category : 'pov' }
 PannFisher >> pov [ 
 	<pov>
