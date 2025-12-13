@@ -200,8 +200,7 @@ PannModel >> initMatrix30 [
 		constrainedBy: [ :aCell | aCell state = #mudflat ].
 		
 	self buildSare.
-	
-	self initializeProtectedArea
+
 ]
 
 { #category : 'init' }
@@ -304,12 +303,6 @@ PannModel >> initialiseSareAttributes1 [
 	sare := ( self @@ PannSare ) detect: [ :each | each id = 1]. 
 	sare name: 'amacala 1'.
 	sare recruitCapacity: 200. "20 000 1cm shellfishes are recruited every year, so 109 every two days "
-]
-
-{ #category : 'initialization' }
-PannModel >> initializeProtectedArea [
-
-	(self sareNamed: #mbina) components do: #beProtected
 ]
 
 { #category : 'time  ' }
