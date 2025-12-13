@@ -76,16 +76,14 @@ PannPlot >> isVillage [
 	^ state = #village
 ]
 
-{ #category : 'pov' }
+{ #category : 'accessing' }
 PannPlot >> pov [ 
 
 	<pov>
 	
 	| pov |
 	pov := CMPointOfView new.
-	
-	self isProtected ifTrue: [ pov borderColor: Color red ].
-	
+
 	state = #sea ifTrue: [ pov color: '70EAFF' ].
 	state = #village ifTrue: [ pov color: '8F1437' ].
 	state = #mudflat ifTrue: [ pov color: 'FFFCB3' ].

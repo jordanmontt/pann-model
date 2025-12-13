@@ -199,7 +199,7 @@ PannModel >> initMatrix30 [
 		randomlyLocatedEntities: PannFisher
 		constrainedBy: [ :aCell | aCell state = #mudflat ].
 		
-	self buildSare.
+	self buildSare. 
 
 ]
 
